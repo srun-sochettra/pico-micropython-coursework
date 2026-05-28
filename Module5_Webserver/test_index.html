@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <head>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<meta http-equiv='refresh' content='5'>
+	<title>Pico 2W Async Web Server</title>
+
+
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    button { padding: 14px 28px; font-size: 18px; margin: 8px;
+             border-radius: 8px; cursor: pointer; border: none; }
+    .on  { background: #4CAF50; color: white; }
+    .off { background: #F44336; color: white; }
+    .val { background: #2196F3; color: white; }
+  </style>
+</head>
+<body>
+  <h1>Raspberry Pi Pico 2W</h1>
+  <h2>LED Control</h2>
+  <a href='./lighton'> <button class='on' >Turn ON </button></a>
+  <a href='./lightoff'><button class='off'>Turn OFF</button></a>
+  <p>LED state: <strong>{state}</strong></p>
+  <h2>Sensor Reading</h2>
+  <a href='./value'><button class='val'>Fetch Value</button></a>
+  <p>Value: <strong>{value}</strong></p>
+</body>
+</html>
