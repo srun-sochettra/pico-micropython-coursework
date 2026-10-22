@@ -1,107 +1,57 @@
-# 🚀 Raspberry Pi Pico & MicroPython Coursework (NUM Y2 S2)
+# Pico MicroPython Coursework
 
-Central repository for my **Raspberry Pi Pico** coursework at the **National University of Management (NUM)**, Year 2, Semester 2. The labs use **MicroPython**, **VS Code**, and the **MicroPico** extension to practice embedded programming, sensors, networking, web servers, MQTT, and IoT cloud integration.
+**Embedded-programming labs covering GPIO, RFID, Wi-Fi, HTTP dashboards and MQTT telemetry.**
 
----
+Collected by Srun Sochettra for National University of Management, Year 2, Semester 2, as described in the original README. Examples use MicroPython, VS Code and MicroPico. This is a collection of independent exercises, not one deployable firmware application.
 
-## 📂 Repository Structure
+## Module guide
 
-| Folder | Description | Key Topics |
-| :--- | :--- | :--- |
-| **`Module1_Pico_VSCode_MicroPython`** | Pico and MicroPython basics | GPIO, blinking LEDs, onboard temperature sensor |
-| **`Module2_Pico_RFID_VSCode`** | RFID integration | SPI communication, MFRC522, RFID card reading/writing, access control |
-| **`Module3_Getting_Started_with_Wi-Fi_MicroPython`** | Pico W networking | Wi-Fi scan/connect, static IP, AP mode, captive portal, dashboard |
-| **`Module5_Webserver`** | Pico W web server practice | Sockets, HTTP routes, JSON responses, AJAX polling, sensor dashboards |
-| **`Module6_MQTT_Protocol_&_IoT_Cloud_Integration`** | MQTT and IoT cloud integration | MQTT publish/subscribe, LED control, DHT22 telemetry, SSL broker connection |
+| Folder | Exercises |
+| --- | --- |
+| Module1_Pico_VSCode_MicroPython | LED blinking and internal-temperature calculation |
+| Module2_Pico_RFID_VSCode | UID reading, RGB feedback, card block reads/writes and access checks |
+| Module3_Getting_Started_with_Wi-Fi_MicroPython | Scanning, station connections, static addressing, AP fallback and LED dashboards |
+| Module5_Webserver | Socket/asyncio servers, routes, JSON status and browser polling |
+| Module6_MQTT_Protocol_&_IoT_Cloud_Integration | MQTT LED subscriptions and DHT22 telemetry |
 
----
+The supplied numbering skips Module 4. Existing folders and lecture filenames are preserved.
 
-## 🛠️ Development Environment
+## What the examples demonstrate
 
-### Hardware
+Module 1 includes an RP2040-labelled temperature formula, not calibrated ambient sensing. Module 2 has UID-only and UID-plus-card-text exercises; the secure filename is not evidence of production security.
 
-- Raspberry Pi Pico or Raspberry Pi Pico W
-- USB-to-Micro-USB cable
-- LEDs and resistors for GPIO practice
-- MFRC522 RFID module for Module 2
-- DHT22 sensor for MQTT telemetry practice
+Module 3's hybrid example tries station mode and falls back to an AP. Its dashboard polls status; the script labelled captive portal does not implement a DNS portal service.
 
-### Software
+Module 5 generates its displayed sensor values with random.randint. They are simulated values, not physical sensor readings. The AJAX example polls JSON status every three seconds. Module 6 reads a DHT22 on GP15; its v2 publisher also subscribes to LED commands but toggles the same LED in its loop.
 
-- [Visual Studio Code](https://code.visualstudio.com/)
-- [MicroPico VS Code Extension](https://marketplace.visualstudio.com/items?itemName=paulober.pico-w-go)
-- MicroPython firmware for the correct board:
-  - [Raspberry Pi Pico](https://micropython.org/download/RPI_PICO/)
-  - [Raspberry Pi Pico W](https://micropython.org/download/RPI_PICO_W/)
+This coursework is separate from the standalone pico-rfid-access-control repository.
 
----
+## Run an exercise
 
-## ⚙️ Quick Setup
+The original README describes opening the repository in VS Code, connecting a board with appropriate MicroPython firmware, confirming MicroPico connectivity and using **MicroPico: Run Current File** for the selected script. This workflow was not executed during the refresh.
 
-1. Open this repository in VS Code.
-2. Connect the Pico or Pico W by USB.
-3. Flash the correct MicroPython UF2 firmware if the board is not already set up.
-4. Confirm that the MicroPico extension shows the board as connected.
-5. Open the script you want to run.
-6. Run it with `Ctrl+Shift+P` -> `MicroPico: Run Current File`.
+Run one exercise at a time. Inspect its imports and GPIO assignments first. Module 2 needs the corresponding local mfrc522.py; Module 5 imports SSID/PASSWORD from secrets.py; Module 6 needs config.py and its umqtt folder. Avoid flattening all modules onto the board because helper names overlap.
 
-For scripts that import helper files, upload the full module folder or the required files to the board before running the main script.
+No firmware version or tested board matrix is supplied. Scripts mix Pin('LED'), Pin(25), RP2040-specific calculations and Pico 2 W descriptions. Do not assume every example runs unchanged on every Pico model.
 
----
+## Configuration and safety
 
-## 🌐 Wi-Fi, Web Server, and MQTT Configuration
+Review grounding/common reference, power, current limits and protection against the actual board/module specifications before wiring. This source is not a validated wiring design. Use a demonstration rig, not safety-critical equipment.
 
-Networked examples require a **Raspberry Pi Pico W**.
+**Network credentials are committed in several Module 3 scripts and Module5_Webserver/secrets.py.** Some AP examples print passwords. If any values are live, rotate them with the network owner and clean public source/history appropriately. This overlay neither repeats nor removes them.
 
-### Wi-Fi examples
+Module 6 config.py contains Wi-Fi/broker placeholders. Its client selects port 8883 when SSL is enabled and port is zero. SSL=True does not establish verified certificate validation or a tested connection. Review firmware compatibility and broker configuration separately.
 
-Module 3 and Module 5 scripts use the Pico W Wi-Fi interface for station mode, access point mode, web servers, and HTTP responses.
+Use only authorised cards and networks. The block-write exercise repeatedly writes block 1; use a disposable test card. HTTP controls have no application login or TLS configuration and should remain on an isolated lab network.
 
-### MQTT examples
+## Materials and attribution
 
-Module 6 uses MQTT over SSL with credentials stored in:
+The inventory includes lecture PDFs, Word documents and slides. Their binary contents were not inspected. Preserve attribution comments and confirm permissions before redistributing lectures or bundled drivers. No project licence file is supplied; this refresh assigns none.
 
-```text
-Module6_MQTT_Protocol_&_IoT_Cloud_Integration/Practice/config.py
-```
+## Checks and known gaps
 
-Update the placeholders before running MQTT scripts:
+All 38 supplied Python files passed CPython AST syntax parsing. No script was imported or executed. This does not verify MicroPython compatibility, wiring, network operation or sensor accuracy. No automated test suite is supplied; test_index.html is a page example, not a test runner.
 
-```python
-wifi_ssid = 'REPLACE_WITH_YOUR_SSID'
-wifi_password = 'REPLACE_WITH_YOUR_PASSWORD'
-mqtt_server = b'MQTT_BROKER_URL'
-mqtt_username = b'BROKER_USERNAME'
-mqtt_password = b'BROKER_PASSWORD'
-```
+Static review found mismatched RFID APIs in Intermediate/read_block.py, an undefined third-cascade driver method and a bitwise-complement condition in both drivers' polling loops. MQTT exercises import simple, not robust; the bundled robust client does not automatically enable reconnect behaviour.
 
-The `Practice/umqtt` folder contains the MQTT client library files used by the Module 6 scripts. Upload the `umqtt` folder with your selected MQTT script and `config.py`.
-
-Common MQTT topics used in the practice scripts:
-
-| Topic | Direction | Purpose |
-| :--- | :--- | :--- |
-| `pico/led` | Subscribe | Control the onboard LED with `ON` or `OFF` |
-| `pico/temperature` | Publish | Send DHT22 temperature readings |
-| `pico/humidity` | Publish | Send DHT22 humidity readings |
-
----
-
-## 📘 Learning Resources
-
-- [Pico MicroPython Lecture](./Module1_Pico_VSCode_MicroPython/Pico_VSCode_MicroPython_Lecture.pdf)
-- [Pico RFID Lecture](./Module2_Pico_RFID_VSCode/Pico_RFID_VSCode_Lecture.pdf)
-- [Pico W MQTT Lecture](./Module6_MQTT_Protocol_&_IoT_Cloud_Integration/Lecture/PicoW%20Getting%20Started%20with%20MQTT%20Lecture.pdf)
-
----
-
-## 👨‍💻 Author
-
-**Srun Sochettra**  
-Year 2, Semester 2  
-Course: Raspberry Pi Pico Development
-
----
-
-> [!NOTE]
-> This repository is for educational purposes. Code may need pin, Wi-Fi, and broker settings adjusted for your own hardware and network.
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md) and [refresh notes](docs/repository-refresh.md). Firmware and configuration are unchanged.
